@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ahnalbtest
+  namespace: default
+  labels:
+    name: test
+    role: test
+spec:
+  selector:
+    matchLabels:
+      name: test
+      role: test
+  template:
+    metadata:
+      labels:
+        name: test
+        role: test
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: kosac-api-service-files
+          image: xxdd086q.private-ncr.gov-ntruss.com/test:latest
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: OKIND
+              value: test
+            - name: license
+              valueFrom:
+                secretKeyRef:
+                  name: whatap
+                  key: LICENSE
+            - name: whatap.server.host
+              valueFrom:
+                secretKeyRef:
+                  name: whatap
+                  key: SERVER_HOST
